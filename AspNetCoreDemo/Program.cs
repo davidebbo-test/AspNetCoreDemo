@@ -17,6 +17,7 @@ namespace AspNetCoreDemo
                 .UseIISIntegration()
                 .UseStartup<Startup>()
                 .UseApplicationInsights()
+                .UseAzureAppServices()
                 .Build();
 
             host.Run();
