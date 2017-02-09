@@ -20,6 +20,17 @@ namespace AspNetCoreDemo
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
+
+            // Only use KeyVault in Production
+            if (!env.IsDevelopment())
+            {
+                builder.AddAzureKeyVault(
+                        $"https://{Configuration["Vault"]}.vault.azure.net/",
+                        Configuration["ClientId"],
+                        Configuration["ClientSecret"]);
+
+                Configuration = builder.Build();
+            }
         }
 
         public IConfigurationRoot Configuration { get; }
