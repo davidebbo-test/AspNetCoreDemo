@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Logging;
+using Microsoft.ApplicationInsights;
 
 namespace AspNetCoreDemo.Controllers
 {
@@ -30,6 +31,9 @@ namespace AspNetCoreDemo.Controllers
 
         public IActionResult About()
         {
+            var telemetry = new TelemetryClient();
+            telemetry.TrackEvent("About");
+
             ViewData["Message"] = $"App name is '{_config.Value.AppName}', Secret is '{_config.Value.BigSecret}'";
 
             return View();
@@ -39,7 +43,9 @@ namespace AspNetCoreDemo.Controllers
         {
             ViewData["Message"] = "Your contact page.";
 
-            return View();
+            throw new Exception("Contact is busted :(");
+
+            //return View();
         }
 
         public IActionResult Error()
