@@ -21,8 +21,8 @@ namespace AspNetCoreDemo
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
 
-            // Only use KeyVault in Production
-            if (!env.IsDevelopment())
+            // Only KeyVault if configured
+            if (!String.IsNullOrEmpty(Configuration["Vault"]))
             {
                 builder.AddAzureKeyVault(
                         $"https://{Configuration["Vault"]}.vault.azure.net/",
