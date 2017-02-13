@@ -6,17 +6,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.ApplicationInsights;
+using Microsoft.Extensions.Configuration;
 
 namespace AspNetCoreDemo.Controllers
 {
     public class HomeController : Controller
     {
-        readonly IOptions<MyConfig> _config;
+        readonly IConfiguration _config;
+        readonly IOptions<MyConfig> _myConfig;
         readonly ILogger _logger;
 
-        public HomeController(IOptions<MyConfig> config, ILoggerFactory loggerFactory)
+        public HomeController(IOptions<MyConfig> myConfig, IConfiguration config, ILoggerFactory loggerFactory)
         {
             _config = config;
+            _myConfig = myConfig;
             _logger = loggerFactory.CreateLogger<HomeController>();
         }
 
@@ -34,7 +37,7 @@ namespace AspNetCoreDemo.Controllers
             var telemetry = new TelemetryClient();
             telemetry.TrackEvent("About");
 
-            ViewData["Message"] = $"App name is '{_config.Value.AppName}', Secret is '{_config.Value.BigSecret}'";
+            ViewData["Message"] = $"App name is '{_myConfig.Value.AppName}', Secret is '{_myConfig.Value.BigSecret}', Db='{_config.GetConnectionString("MyDatabase")}'";
 
             return View();
         }

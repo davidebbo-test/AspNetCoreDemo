@@ -44,6 +44,9 @@ namespace AspNetCoreDemo
             // Add our Config object so it can be injected
             services.Configure<MyConfig>(Configuration);
 
+            // Add generic config as well
+            services.AddSingleton<IConfiguration>(Configuration);
+
             // Add framework services.
             services.AddMvc();
         }
