@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.ApplicationInsights;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Hosting;
 
 namespace AspNetCoreDemo.Controllers
 {
@@ -15,12 +16,14 @@ namespace AspNetCoreDemo.Controllers
         readonly IConfiguration _config;
         readonly IOptions<MyConfig> _myConfig;
         readonly ILogger _logger;
+        readonly IHostingEnvironment _hostingEnvironment;
 
-        public HomeController(IOptions<MyConfig> myConfig, IConfiguration config, ILoggerFactory loggerFactory)
+        public HomeController(IOptions<MyConfig> myConfig, IConfiguration config, ILoggerFactory loggerFactory, IHostingEnvironment hostingEnvironment)
         {
             _config = config;
             _myConfig = myConfig;
             _logger = loggerFactory.CreateLogger<HomeController>();
+            _hostingEnvironment = hostingEnvironment;
         }
 
         public IActionResult Index()
@@ -37,7 +40,7 @@ namespace AspNetCoreDemo.Controllers
             var telemetry = new TelemetryClient();
             telemetry.TrackEvent("About");
 
-            ViewData["Message"] = $"App name is '{_myConfig.Value.AppName}', Secret is '{_myConfig.Value.BigSecret}', Db='{_config.GetConnectionString("MyDatabase")}'";
+            ViewData["Message"] = $"App name is '{_myConfig.Value.AppName}', Secret is '{_myConfig.Value.BigSecret}', Db='{_config.GetConnectionString("MyDatabase")}, WebRootPath='{_hostingEnvironment.WebRootPath}'";
 
             return View();
         }
